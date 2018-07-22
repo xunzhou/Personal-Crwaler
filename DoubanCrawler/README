@@ -1,0 +1,9 @@
+Usage:
+python3 crawl.py
+
+Output:
+douban.csv - most recent ~10000 movies on douban
+
+Known issues:
+python2 handled encoding differently, not addressed in the script, python3 works properly.
+
