@@ -7,3 +7,5 @@ Web crawler for personal use.
     - TODO: crawl RateMyProfessor ratings.
 - Douban-Crawler
     - Ratings/info on recent movies from douban movie search.
+- Cbooo-Crawler
+    - Boxoffice info from cbooo.cn search.
