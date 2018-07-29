@@ -105,7 +105,7 @@ def getID(cat, src, yr):
 def get(id):
     u = 'http://m.maoyan.com/movie/'+str(id)
     r = requests.get(u, headers=mheaders, cookies=mcookies)
-    print(str(r.status_code)+' '+u)
+    # print(str(r.status_code)+' '+u)
     if(len(r.text) > 20000):
         soup = BeautifulSoup(r.text, 'lxml')
         box = soup.find_all('div',{'class':'movie-box', 'class':'cell'})
@@ -130,12 +130,12 @@ def get(id):
         print("[debug] "+u)
 
 def fetch():
-    pool = Pool()
+    pool = Pool(20)
     res = list(tqdm(pool.imap(get, id),total=len(id)))
     pool.terminate(); pool.join()
     return res
 
-if __name__ == "__main__":
+def fromSearch():
     print("Getting attributes...")
     getattr()
     print("Getting ids...")
@@ -144,6 +144,29 @@ if __name__ == "__main__":
     # getID('',source['大陆'],year['2018']) #'中国香港'
     # getID('','&sourceId=2','&yearId=13') # source = 10
     print("Got "+str(len(id))+" ids.")
+
+def getIDPro(yr):
+    u = 'http://piaofang.maoyan.com/rankings/year?year='+yr
+    r = requests.get(u)
+    soup = BeautifulSoup(r.text, 'lxml')
+    rank_list = soup.find('div',{'id':"ranks-list"})
+    ul = rank_list.find_all('ul')
+    for li in ul:
+        id.append(li['data-com'][20:-1])
+    print("Got "+str(len(ul))+" ids for movies in "+yr)
+
+
+def fromPro():
+    year = ['2018','2017','2016','2015','2014','2013','2012','2011']
+    print("Getting ids...")
+    for y in year:
+        getIDPro(y)    
+    print("Got "+str(len(id))+" ids from Maoyan Pro.")
+    
+
+if __name__ == "__main__":
+    # fromSearch()    # search currently not working
+    fromPro()
 
     print("Fetching movies...")
     res = fetch()
